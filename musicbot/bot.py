@@ -49,7 +49,7 @@ log = logging.getLogger(__name__)
 class MusicBot(discord.Client):
     def __init__(self, config_file=None, perms_file=None):
         try:
-            sys.stdout.write("\x1b]2;MusicBot {}\x07".format(BOTVERSION))
+            sys.stdout.write("\x1b]2;JanDJ2 {}\x07".format(BOTVERSION))
         except:
             pass
 
@@ -77,16 +77,16 @@ class MusicBot(discord.Client):
 
         self._setup_logging()
 
-        log.info(' MusicBot (version {}) '.format(BOTVERSION).center(50, '='))
+        log.info(' anDJ2 (version {}) '.format(BOTVERSION).center(50, '='))
 
         if not self.autoplaylist:
-            log.warning("Autoplaylist is empty, disabling.")
+            log.warning("Autoplaylista jest pusta.Wyłączam.")
             self.config.auto_playlist = False
         else:
-            log.info("Loaded autoplaylist with {} entries".format(len(self.autoplaylist)))
+            log.info("Autoplaylista zapełniona przez  taką ilość -{}".format(len(self.autoplaylist)))
 
         if self.blacklist:
-            log.debug("Loaded blacklist with {} entries".format(len(self.blacklist)))
+            log.debug("Murzyńska lista zapełniona {}".format(len(self.blacklist)))
 
         # TODO: Do these properly
         ssd_defaults = {
@@ -98,7 +98,7 @@ class MusicBot(discord.Client):
 
         super().__init__()
         self.aiosession = aiohttp.ClientSession(loop=self.loop)
-        self.http.user_agent += ' MusicBot/%s' % BOTVERSION
+        self.http.user_agent += ' JanDJ2/%s' % BOTVERSION
 
     def __del__(self):
         # These functions return futures but it doesn't matter
@@ -110,7 +110,7 @@ class MusicBot(discord.Client):
 
         super().__init__()
         self.aiosession = aiohttp.ClientSession(loop=self.loop)
-        self.http.user_agent += ' MusicBot/%s' % BOTVERSION
+        self.http.user_agent += ' JanDJ2/%s' % BOTVERSION
 
     # TODO: Add some sort of `denied` argument for a message to send when someone else tries to use it
     def owner_only(func):
@@ -2628,7 +2628,7 @@ class MusicBot(discord.Client):
         log.info("Bot has been joined server: {}".format(server.name))
 
         if not self.user.bot:
-            alertmsg = "<@{uid}> Hi I'm a musicbot please mute me."
+            alertmsg = "<@{uid}> Witaj jestem JanDJ2,prosze zmutuj mnie."
 
             if server.id == "81384788765712384" and not server.unavailable: # Discord API
                 playground = server.get_channel("94831883505905664") or discord.utils.get(server.channels, name='playground') or server
@@ -2642,7 +2642,7 @@ class MusicBot(discord.Client):
         pathlib.Path('data/%s/' % server.id).mkdir(exist_ok=True)
 
     async def on_server_remove(self, server: discord.Server):
-        log.info("Bot has been removed from server: {}".format(server.name))
+        log.info("BOT ZOSTAŁ WYJEBANY Z SERWERA: {}".format(server.name))
         log.debug('Updated server list:')
         [log.debug(' - ' + s.name) for s in self.servers]
 
@@ -2654,7 +2654,7 @@ class MusicBot(discord.Client):
         if not self.init_ok:
             return # Ignore pre-ready events
 
-        log.debug("Server \"{}\" has become available.".format(server.name))
+        log.debug("Server \"{}\" jest dostępny.".format(server.name))
 
         player = self.get_player_in(server)
 
@@ -2662,17 +2662,17 @@ class MusicBot(discord.Client):
             av_paused = self.server_specific_data[server]['availability_paused']
 
             if av_paused:
-                log.debug("Resuming player in \"{}\" due to availability.".format(server.name))
+                log.debug("Wznawianie  \"{}\" ze względu na dostępność.".format(server.name))
                 self.server_specific_data[server]['availability_paused'] = False
                 player.resume()
 
 
     async def on_server_unavailable(self, server: discord.Server):
-        log.debug("Server \"{}\" has become unavailable.".format(server.name))
+        log.debug("Server \"{}\" jest niedostępny.".format(server.name))
 
         player = self.get_player_in(server)
 
         if player and player.is_playing:
-            log.debug("Pausing player in \"{}\" due to unavailability.".format(server.name))
+            log.debug("Pauzowanie \"{}\" przez niedostępność.".format(server.name))
             self.server_specific_data[server]['availability_paused'] = True
             player.pause()
